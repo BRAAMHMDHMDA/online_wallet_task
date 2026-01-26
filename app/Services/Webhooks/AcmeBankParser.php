@@ -10,7 +10,6 @@ class AcmeBankParser implements BankParser
     {
         $lines = explode("\n", trim($payload));
         $transactions = [];
-
         foreach ($lines as $line) {
             [$amount, $reference, $date] = explode('//', $line);
 
