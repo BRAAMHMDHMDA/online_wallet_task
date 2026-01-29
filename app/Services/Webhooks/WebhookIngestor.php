@@ -5,7 +5,6 @@ namespace App\Services\Webhooks;
 use App\Actions\Transactions;
 use App\Enums\IncomingWebhookStatus;
 use App\Models\IncomingWebhook;
-use InvalidArgumentException;
 
 class WebhookIngestor
 {
@@ -13,12 +12,7 @@ class WebhookIngestor
     {
 
         try {
-            $parser = match ($webhook->bank) {
-                'paytech' => new PayTechBankParser(),
-                'acme'    => new AcmeBankParser(),
-                default   => throw new InvalidArgumentException("Unsupported bank: {$webhook->bank}"),
-            };
-
+            $parser = BankParserFactory::make($webhook->bank);
             $transactions = $parser->parse($webhook->payload);
 
             foreach ($transactions as $transaction) {
